@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# Runs the workout sync headless. Schedule it (cron / Task Scheduler) or run by hand.
+# Runs the session breakdown headless. Schedule it (cron / Task Scheduler) or run by hand.
 # Replace the Strava tool names below with the exact ones `/mcp` shows in Claude Code.
-#   ./run_sync.sh             normal run
-#   DRY_RUN=1 ./run_sync.sh   read everything, write nothing to Strava
+#   ./run_breakdown.sh             normal run
+#   DRY_RUN=1 ./run_breakdown.sh   read everything, write nothing to Strava
 set -euo pipefail
 cd "$(dirname "$0")"
 mkdir -p tmp
 export PATH="$HOME/.local/bin:$PATH"   # where the claude CLI installs; Task Scheduler's PATH lacks it
 
 if ! command -v claude >/dev/null 2>&1; then
-  echo "$(date): claude CLI not found on PATH" >> sync.log
+  echo "$(date): claude CLI not found on PATH" >> breakdown.log
   exit 1
 fi
 
@@ -27,10 +27,10 @@ ALLOWED_TOOLS=(
 )
 
 if [[ ! -f athlete.md ]]; then
-  echo "$(date): athlete.md missing; copy athlete.example.md and fill it in" >> sync.log
+  echo "$(date): athlete.md missing; copy athlete.example.md and fill it in" >> breakdown.log
   exit 1
 fi
-PROMPT="$(cat workout-sync.md)"$'\n\n'"$(cat athlete.md)"
+PROMPT="$(cat session-breakdown.md)"$'\n\n'"$(cat athlete.md)"
 if [[ "${DRY_RUN:-0}" == "1" ]]; then
   PROMPT+=$'\n\n**DRY RUN.** You have no Strava write tool. For each activity, print the
 description block you would have written instead of updating it. Do not modify
@@ -42,4 +42,4 @@ fi
 {
   echo "=== $(date) ${DRY_RUN:+(dry run)} ==="
   claude -p "$PROMPT" --allowedTools "$(IFS=,; echo "${ALLOWED_TOOLS[*]}")"
-} >> sync.log 2>&1
+} >> breakdown.log 2>&1

@@ -1,4 +1,4 @@
-# Strava workout sync
+# Strava session breakdown
 
 For runs you've tagged as a Workout on Strava, reads what you ran from the
 laps, matches it to the session your coach prescribed by email, and writes your splits
@@ -7,12 +7,12 @@ on your subscription, so no API key is needed.
 
 | File | What it does |
 |---|---|
-| `workout-sync.md` | Instructions Claude Code follows on each run |
+| `session-breakdown.md` | Instructions Claude Code follows on each run |
 | `athlete.example.md` | Template for `athlete.md` (gitignored): your name, coach, emails, time zone |
 | `normalize_laps.py` | Reads session structure from laps, repairs split reps, computes km splits and WU/CD times |
 | `fetch_streams.py` | Downloads time/distance streams for km splits of unlapped efforts |
 | `test_normalize_laps.py` | Synthetic lap cases (`python3 test_normalize_laps.py`) |
-| `run_sync.sh` | Headless runner for cron or by hand |
+| `run_breakdown.sh` | Headless runner for cron or by hand |
 
 ## Setup
 
@@ -30,16 +30,16 @@ on your subscription, so no API key is needed.
    token in that folder's `.env`, run `uv sync`, then:
    `claude mcp add strava --scope user -- uv run --directory C:\dev\STRAVA-MCP-SERVER strava_server.py`.
    It can't set `workout_type`; tag workouts yourself on Strava.
-4. **Gmail in Claude Code.** `run_sync.sh` uses the claude.ai Gmail connector
+4. **Gmail in Claude Code.** `run_breakdown.sh` uses the claude.ai Gmail connector
    (`mcp__claude_ai_Gmail__*`). Run `claude`, then `/mcp`, and confirm it's
    listed. If you use a different Gmail MCP server instead, change those names.
 5. **Fix tool names.** Copy the exact Strava tool names from `/mcp` into
-   `run_sync.sh`. Keep Gmail limited to search/read.
-6. **Dry run first.** Run `DRY_RUN=1 ./run_sync.sh` and read `sync.log`. The
+   `run_breakdown.sh`. Keep Gmail limited to search/read.
+6. **Dry run first.** Run `DRY_RUN=1 ./run_breakdown.sh` and read `breakdown.log`. The
    write tool is withheld, and Claude prints what it would have written. Then
-   run `./run_sync.sh` and check the first updated workout on Strava.
+   run `./run_breakdown.sh` and check the first updated workout on Strava.
 7. **Schedule it.** The Task Scheduler task "Strava Session Breakdown" runs
-   `run_sync.sh` through Git Bash on Monday and Wednesday at 10pm and Saturday at
+   `run_breakdown.sh` through Git Bash on Monday and Wednesday at 10pm and Saturday at
    3pm. With the 3-day lookback that covers every day of the week. A run missed
    while the PC was off starts when it's next on. Change the times in Task
    Scheduler, or remove the task with

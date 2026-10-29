@@ -1,6 +1,6 @@
 tmp/
 __pycache__/
-sync.log
+breakdown.log
 processed.json
 review.md
 athlete.md
