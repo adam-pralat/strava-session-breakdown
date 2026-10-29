@@ -1,0 +1,6 @@
+tmp/
+__pycache__/
+sync.log
+processed.json
+review.md
+athlete.md
