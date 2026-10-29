@@ -40,7 +40,7 @@ on your subscription, so no API key is needed.
    run `./run_breakdown.sh` and check the first updated workout on Strava.
 7. **Schedule it.** The Task Scheduler task "Strava Session Breakdown" runs
    `run_breakdown.sh` through Git Bash on Monday and Wednesday at 9pm and Saturday at
-   3pm. With the 3-day lookback that covers every day of the week. A run missed
+   2pm. With the 3-day lookback that covers every day of the week. A run missed
    while the PC was off starts when it's next on. Change the times in Task
    Scheduler, or remove the task with
    `Unregister-ScheduledTask "Strava Session Breakdown"`.
